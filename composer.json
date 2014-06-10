@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BlueTea\\CoreBundle": ""
+            "BlueTea\\ImportBundle": ""
         }
     },
     "target-dir": "Bluetea/ImportBundle",
