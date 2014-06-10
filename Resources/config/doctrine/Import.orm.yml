@@ -1,0 +1,45 @@
+Bluetea\ImportBundle\Entity\Import:
+    type: entity
+    table: import
+    id:
+        id:
+            id: true
+            type: integer
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            length: 255
+        filePath:
+            type: string
+            length: 255
+        importType:
+            type: string
+            length: 255
+        datetime:
+            type: datetime
+        status:
+            type: string
+            length: 255
+    oneToMany:
+        logs:
+            targetEntity: Bluetea\ImportBundle\Entity\ImportLog
+            cascade:
+                - remove
+                - persist
+                - detach
+            mappedBy: import
+    lifecycleCallbacks:
+        prePersist:
+            - updateDatetime
+            - preUpload
+        preUpdate:
+            - updateDatetime
+            - preUpload
+        postPersist:
+            - upload
+        postUpdate:
+            - upload
+        postRemove:
+            - removeUpload

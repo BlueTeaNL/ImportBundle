@@ -1,0 +1,4 @@
+parameters:
+    bluetea_import.chain.class: Bluetea\ImportBundle\Services\ImportChain
+    bluetea_import.import_manager.class: Bluetea\ImportBundle\Doctrine\ImportManager
+    bluetea_import.import_log_manager.class: Bluetea\ImportBundle\Doctrine\ImportLogManager

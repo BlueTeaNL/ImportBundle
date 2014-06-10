@@ -1,0 +1,36 @@
+services:
+    # Managers
+    bluetea_import.import_manager:
+        class: %bluetea_import.import_manager.class%
+        arguments:
+            - @bluetea_import.entity_manager
+            - %bluetea_import.model.import.class%
+
+    bluetea_import.import_log_manager:
+        class: %bluetea_import.import_log_manager.class%
+        arguments:
+            - @bluetea_import.entity_manager
+            - %bluetea_import.model.import_log.class%
+
+    bluetea_import.entity_manager:
+        class: Doctrine\ORM\EntityManager
+        factory-service: doctrine
+        factory-method: getManager
+
+    bluetea_import.import_entity_manager:
+        class: Doctrine\ORM\EntityManager
+        factory-service: doctrine
+        factory-method: getManager
+        arguments:
+            - "import"
+
+    # Import services
+    bluetea_import.csv:
+        class: Bluetea\ImportBundle\Services\Import
+        arguments:
+            - Bluetea\ImportBundle\Factory\CSVFactory
+            - @event_dispatcher
+            - @bluetea_import.import_log_manager
+
+    bluetea_import.chain:
+        class: %bluetea_import.chain.class%

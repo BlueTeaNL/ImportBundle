@@ -1,0 +1,24 @@
+Bluetea\ImportBundle\Entity\ImportLog:
+    type: entity
+    table: import_log
+    id:
+        id:
+            id: true
+            type: integer
+            generator:
+                strategy: IDENTITY
+    fields:
+        log:
+            type: text
+        datetime:
+            type: datetime
+    manyToOne:
+        import:
+            targetEntity: Bluetea\ImportBundle\Entity\Import
+            cascade:
+                - persist
+            inversedBy: logs
+            joinColumns:
+                import_id:
+                    referencedColumnName: id
+    lifecycleCallbacks: {  }

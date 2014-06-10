@@ -1,0 +1,32 @@
+{
+    "name": "bluetea/import-bundle",
+    "description": "BlueTea ImportBundle for the Symfony2 framework",
+    "keywords": ["symfony2","import","csv"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pim Widdershoven",
+            "email": "p.widdershoven@bluetea.nl",
+            "homepage": "http://www.bluetea.nl",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/framework-bundle": "~2.4",
+        "doctrine/doctrine-bundle": "~1.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "BlueTea\\CoreBundle": ""
+        }
+    },
+    "target-dir": "Bluetea/ImportBundle",
+	"extra": {
+        "branch-alias": {
+            "dev-master": "0.1"
+        }
+    },
+    "minimum-stability": "dev"
+}
