@@ -50,15 +50,15 @@ abstract class ImportLog implements ImportLogInterface
     }
 
     /**
-     * @param Import $import
+     * @param ImportInterface $import
      */
-    public function setImport(Import $import)
+    public function setImport(ImportInterface $import)
     {
         $this->import = $import;
     }
 
     /**
-     * @return Import
+     * @return ImportInterface
      */
     public function getImport()
     {

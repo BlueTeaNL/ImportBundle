@@ -30,12 +30,12 @@ interface ImportLogInterface
     public function getDatetime();
 
     /**
-     * @param Import $import
+     * @param ImportInterface $import
      */
-    public function setImport(Import $import);
+    public function setImport(ImportInterface $import);
 
     /**
-     * @return Import
+     * @return ImportInterface
      */
     public function getImport();
 }

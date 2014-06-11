@@ -3,14 +3,14 @@
 namespace Bluetea\ImportBundle\Factory;
 
 use Bluetea\ImportBundle\Exception\ImportException;
-use Bluetea\ImportBundle\Model\Import;
+use Bluetea\ImportBundle\Model\ImportInterface;
 
 class ImportFactory
 {
     /**
      * Import entity
      *
-     * @var Import
+     * @var ImportInterface
      */
     protected $importEntity;
 
@@ -26,7 +26,7 @@ class ImportFactory
      */
     public function parse()
     {
-        if (empty($this->importEntity) || !$this->importEntity instanceof Import) {
+        if (empty($this->importEntity) || !$this->importEntity instanceof ImportInterface) {
             throw new ImportException("Import entity not found or not an instance of the Import model");
         }
 
@@ -36,15 +36,15 @@ class ImportFactory
     }
 
     /**
-     * @param Import $importEntity
+     * @param ImportInterface $importEntity
      */
-    public function setImportEntity(Import $importEntity)
+    public function setImportEntity(ImportInterface $importEntity)
     {
         $this->importEntity = $importEntity;
     }
 
     /**
-     * @return Import
+     * @return ImportInterface
      */
     public function getImportEntity()
     {

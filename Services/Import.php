@@ -7,7 +7,7 @@ use Bluetea\ImportBundle\Factory\FactoryInterface;
 use Bluetea\ImportBundle\Import\ImportInterface;
 use Bluetea\ImportBundle\Import\ImportLogger;
 use Bluetea\ImportBundle\Model\ImportLogManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Import
 {
@@ -22,7 +22,7 @@ class Import
     protected $factory;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -38,7 +38,7 @@ class Import
 
     public function __construct(
         FactoryInterface $factory,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         ImportLogManagerInterface $importLogManager
     )
     {

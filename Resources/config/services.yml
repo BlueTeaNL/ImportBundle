@@ -9,7 +9,7 @@ services:
     bluetea_import.import_log_manager:
         class: %bluetea_import.import_log_manager.class%
         arguments:
-            - @bluetea_import.entity_manager
+            - @doctrine.orm.entity_manager
             - %bluetea_import.model.import_log.class%
 
     bluetea_import.entity_manager:
@@ -25,10 +25,13 @@ services:
             - "import"
 
     # Import services
+    bluetea_import.factory.csv:
+        class: Bluetea\ImportBundle\Factory\CSVFactory
+
     bluetea_import.csv:
         class: Bluetea\ImportBundle\Services\Import
         arguments:
-            - Bluetea\ImportBundle\Factory\CSVFactory
+            - @bluetea_import.factory.csv
             - @event_dispatcher
             - @bluetea_import.import_log_manager
 

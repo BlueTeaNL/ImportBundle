@@ -2,6 +2,8 @@
 
 namespace Bluetea\ImportBundle\Factory;
 
+use Bluetea\ImportBundle\Model\ImportInterface;
+
 interface FactoryInterface
 {
     /**
@@ -15,14 +17,14 @@ interface FactoryInterface
     /**
      * Set the import entity
      *
-     * @param \Bluetea\ImportBundle\Model\Import $importEntity
+     * @param ImportInterface $importEntity
      */
-    public function setImportEntity($importEntity);
+    public function setImportEntity(ImportInterface $importEntity);
 
     /**
      * Returns the import entity
      *
-     * @return mixed
+     * @return ImportInterface
      */
     public function getImportEntity();
 
