@@ -4,6 +4,12 @@ namespace Bluetea\ImportBundle\Factory;
 
 class CSVFactory extends ImportFactory implements FactoryInterface
 {
+    protected $options = [
+        'delimiter' => ';',
+        'enclosure' => '"',
+        'escape' => '\\'
+    ];
+
     /**
      * Parser
      *
@@ -14,7 +20,7 @@ class CSVFactory extends ImportFactory implements FactoryInterface
     {
         parent::parse();
 
-        $fileObj = new \SplFileObject($this->importEntity->getFilePath());
+        $fileObj = new \SplFileObject($this->importEntity->getAbsolutePath());
         $fileObj->setFlags(\SplFileObject::READ_CSV);
         $fileObj->setCsvControl(
             $this->options['delimiter'],

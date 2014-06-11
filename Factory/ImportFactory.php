@@ -30,8 +30,8 @@ class ImportFactory
             throw new ImportException("Import entity not found or not an instance of the Import model");
         }
 
-        if (!file_exists($this->importEntity->getFilePath())) {
-            throw new ImportException("Couldn't find file " . $this->importEntity->getFilePath());
+        if (!file_exists($this->importEntity->getAbsolutePath())) {
+            throw new ImportException("Couldn't find file " . $this->importEntity->getAbsolutePath());
         }
     }
 

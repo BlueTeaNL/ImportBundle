@@ -89,4 +89,11 @@ interface ImportInterface
      * @return ImportLog[]
      */
     public function getLogs();
+
+    /**
+     * Returns the absolute path to the uploaded file
+     *
+     * @return string
+     */
+    public function getAbsolutePath();
 }
