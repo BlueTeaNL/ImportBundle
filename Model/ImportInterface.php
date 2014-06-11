@@ -32,12 +32,12 @@ interface ImportInterface
     public function getFilePath();
 
     /**
-     * @param \Bluetea\ImportBundle\Import\ImportInterface $importType
+     * @param string $importType
      */
-    public function setImportType(\Bluetea\ImportBundle\Import\ImportInterface $importType);
+    public function setImportType($importType);
 
     /**
-     * @return \Bluetea\ImportBundle\Import\ImportInterface
+     * @return string
      */
     public function getImportType();
 
