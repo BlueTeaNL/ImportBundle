@@ -95,15 +95,15 @@ abstract class Import implements ImportInterface
     }
 
     /**
-     * @param \Bluetea\ImportBundle\Import\ImportInterface $importType
+     * @param string $importType
      */
-    public function setImportType(\Bluetea\ImportBundle\Import\ImportInterface $importType)
+    public function setImportType($importType)
     {
         $this->importType = $importType;
     }
 
     /**
-     * @return \Bluetea\ImportBundle\Import\ImportInterface
+     * @return string
      */
     public function getImportType()
     {
