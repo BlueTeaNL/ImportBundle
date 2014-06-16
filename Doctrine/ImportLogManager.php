@@ -50,7 +50,18 @@ class ImportLogManager extends BaseImportLogManager
     }
 
     /**
-     * Find a user by the given criteria
+     * Find an import log by id
+     *
+     * @param int $id
+     * @return ImportLogInterface
+     */
+    public function findImportLog($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * Find an import log by the given criteria
      *
      * @param array $criteria
      * @return ImportLogInterface
@@ -58,6 +69,20 @@ class ImportLogManager extends BaseImportLogManager
     public function findImportLogBy(array $criteria)
     {
         return $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * Find import logs by the given criteria
+     *
+     * @param array $criteria
+     * @param null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return ImportLogInterface
+     */
+    public function findImportLogsBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**

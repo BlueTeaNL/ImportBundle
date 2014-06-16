@@ -50,6 +50,17 @@ class ImportManager extends BaseImportManager
     }
 
     /**
+     * Find an import by id
+     *
+     * @param int $id
+     * @return ImportInterface
+     */
+    public function findImport($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
      * Find a user by the given criteria
      *
      * @param array $criteria
@@ -58,6 +69,20 @@ class ImportManager extends BaseImportManager
     public function findImportBy(array $criteria)
     {
         return $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * Find imports by the given criteria
+     *
+     * @param array $criteria
+     * @param null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return ImportInterface
+     */
+    public function findImportsBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
