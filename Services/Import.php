@@ -2,11 +2,14 @@
 
 namespace Bluetea\ImportBundle\Services;
 
+use Bluetea\ImportBundle\BlueteaImportEvents;
+use Bluetea\ImportBundle\Event\GetImportEvent;
 use Bluetea\ImportBundle\Exception\ImportException;
 use Bluetea\ImportBundle\Factory\FactoryInterface;
 use Bluetea\ImportBundle\Import\ImportInterface;
 use Bluetea\ImportBundle\Import\ImportLogger;
 use Bluetea\ImportBundle\Model\ImportLogManagerInterface;
+use Bluetea\ImportBundle\Model\ImportManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Import
@@ -27,6 +30,11 @@ class Import
     protected $eventDispatcher;
 
     /**
+     * @var \Bluetea\ImportBundle\Model\ImportManagerInterface
+     */
+    protected $importManager;
+
+    /**
      * @var \Bluetea\ImportBundle\Model\ImportLogManagerInterface
      */
     protected $importLogManager;
@@ -34,27 +42,32 @@ class Import
     /**
      * @var \Bluetea\ImportBundle\Import\ImportLogger
      */
-    protected $importLogger;
+    protected $importLogger = null;
 
     public function __construct(
         FactoryInterface $factory,
         EventDispatcherInterface $eventDispatcher,
+        ImportManagerInterface $importManager,
         ImportLogManagerInterface $importLogManager
     )
     {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->importManager = $importManager;
         $this->importLogManager = $importLogManager;
-
-        $this->importLogger = new ImportLogger();
     }
 
     public function startImport()
     {
+        $this->importLogger = new ImportLogger();
+
         $this->validateMandatoryProperties();
 
         $this->importType->setFactory($this->factory);
         $this->importType->setLogger($this->importLogger);
+
+        $event = new GetImportEvent($this->importType);
+        $this->eventDispatcher->dispatch(BlueteaImportEvents::RUN_IMPORT_INITIALIZE, $event);
 
         // Try to import
         try {
@@ -73,6 +86,17 @@ class Import
         $importLog->setDatetime(new \DateTime());
         $importLog->setLog($this->importLogger->getLog());
         $this->importLogManager->updateImportLog($importLog);
+
+        $importEntity = $this->factory->getImportEntity();
+        $statistics = $this->getStatistics();
+        if ($statistics['error'] > 0) {
+            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::ERROR);
+        } elseif ($statistics['skipped'] > 0) {
+            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::WARNING);
+        } else {
+            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::READY);
+        }
+        $this->importManager->updateImport($importEntity);
 
         return true;
     }
@@ -119,5 +143,20 @@ class Import
     public function setImportType($importType)
     {
         $this->importType = $importType;
+    }
+
+    /**
+     * Return the statistics from the logger if initialized
+     * The logger is initialized when you start the import
+     *
+     * @return array|null
+     */
+    public function getStatistics()
+    {
+        if (!is_null($this->importLogger)) {
+            return $this->importLogger->getStatistics();
+        } else {
+            return null;
+        }
     }
 }
