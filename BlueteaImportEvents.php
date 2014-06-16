@@ -10,8 +10,8 @@ final class BlueteaImportEvents
     /**
      * The RUN_IMPORT_INITIALIZE event occurs when the run import process is initialized
      *
-     * This event allow you to modify the import and import log entity before running the import
-     * The event listener method receives a Bluetea\ImportBundle\Events\RunImportEvent instance
+     * This event allows you to get the import entity before running the import
+     * The event listener method receives a Bluetea\ImportBundle\Events\GetImportEvent instance
      */
     const RUN_IMPORT_INITIALIZE = 'bluetea_import.run_import.initialize';
 
@@ -19,7 +19,7 @@ final class BlueteaImportEvents
      * The RUN_IMPORT_SUCCESS event occurs when the run import process is finished
      *
      * This event allow you to modify the import and import log entity before flushing
-     * The event listener method receives a Bluetea\ImportBundle\Events\RunImportEvent instance
+     * The event listener method receives a Bluetea\ImportBundle\Events\GetImportLogEvent instance
      */
-    const RUN_IMPORT_SUCCESS = 'bluetea_import.run_import.success';
+    const RUN_IMPORT_COMPLETED = 'bluetea_import.run_import.completed';
 }
