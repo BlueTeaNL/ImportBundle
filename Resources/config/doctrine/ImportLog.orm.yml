@@ -15,8 +15,7 @@ Bluetea\ImportBundle\Entity\ImportLog:
     manyToOne:
         import:
             targetEntity: Bluetea\ImportBundle\Entity\Import
-            cascade:
-                - persist
+            cascade: {}
             inversedBy: logs
             joinColumns:
                 import_id:
