@@ -9,20 +9,13 @@ services:
     bluetea_import.import_log_manager:
         class: %bluetea_import.import_log_manager.class%
         arguments:
-            - @doctrine.orm.entity_manager
+            - @bluetea_import.entity_manager
             - %bluetea_import.model.import_log.class%
 
     bluetea_import.entity_manager:
         class: Doctrine\ORM\EntityManager
-        factory-service: doctrine
-        factory-method: getManager
-
-    bluetea_import.import_entity_manager:
-        class: Doctrine\ORM\EntityManager
-        factory-service: doctrine
-        factory-method: getManager
-        arguments:
-            - "import"
+        factory_service: doctrine
+        factory_method: getManager
 
     # Import services
     bluetea_import.factory.csv:
@@ -33,6 +26,7 @@ services:
         arguments:
             - @bluetea_import.factory.csv
             - @event_dispatcher
+            - @bluetea_import.import_manager
             - @bluetea_import.import_log_manager
 
     bluetea_import.chain:
