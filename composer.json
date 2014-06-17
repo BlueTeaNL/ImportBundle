@@ -22,11 +22,5 @@
             "Bluetea\\ImportBundle": ""
         }
     },
-    "target-dir": "Bluetea/ImportBundle",
-	"extra": {
-        "branch-alias": {
-            "dev-master": "1.*"
-        }
-    },
-    "minimum-stability": "dev"
+    "target-dir": "Bluetea/ImportBundle"
 }
