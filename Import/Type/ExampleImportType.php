@@ -2,7 +2,6 @@
 
 namespace Bluetea\ImportBundle\Import\Type;
 
-use Bluetea\ImportBundle\Exception\ResourceNotFoundException;
 use Bluetea\ImportBundle\Import\BaseImport;
 use Bluetea\ImportBundle\Import\ImportInterface;
 use Bluetea\ImportBundle\Exception\InvalidLineCountException;
@@ -17,11 +16,6 @@ class ExampleImportType extends BaseImport implements ImportInterface
      * @var int
      */
     private $columnNumbers = 1;
-
-    /**
-     * @var bool
-     */
-    private $createNonExistingEntities = true;
 
     /**
      * Import

@@ -5,7 +5,6 @@ namespace Bluetea\ImportBundle\Import;
 use Bluetea\ImportBundle\Exception\ImportException;
 use Bluetea\ImportBundle\Import\ImportLogger;
 use Bluetea\ImportBundle\Factory\FactoryInterface;
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Persistence\ObjectManager;
 
 abstract class BaseImport implements ImportInterface
