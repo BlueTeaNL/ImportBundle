@@ -3,7 +3,8 @@
 namespace Bluetea\ImportBundle\Services;
 
 use Bluetea\ImportBundle\BlueteaImportEvents;
-use Bluetea\ImportBundle\Event\GetImportEvent;
+use Bluetea\ImportBundle\Event\GetStatusEvent;
+use Bluetea\ImportBundle\Event\ImportEvent;
 use Bluetea\ImportBundle\Exception\ImportException;
 use Bluetea\ImportBundle\Factory\FactoryInterface;
 use Bluetea\ImportBundle\Import\ImportInterface;
@@ -66,8 +67,8 @@ class Import
         $this->importType->setFactory($this->factory);
         $this->importType->setLogger($this->importLogger);
 
-        $event = new GetImportEvent($this->importType);
-        $this->eventDispatcher->dispatch(BlueteaImportEvents::RUN_IMPORT_INITIALIZE, $event);
+        $event = new ImportEvent($this->importType);
+        $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_INITIALIZE, $event);
 
         // Try to import
         try {
@@ -76,9 +77,6 @@ class Import
             $this->importLogger->add($exception->getMessage(), ImportLogger::CRITICAL);
             $this->importLogger->countError();
         }
-
-        // Save statistics in log
-        $this->importLogger->logStatistics();
 
         // Add ImportLog
         $importLog = $this->importLogManager->createImportLog();
@@ -96,7 +94,19 @@ class Import
         } else {
             $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::READY);
         }
+
+        $event = new GetStatusEvent($this->importType);
+        $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_SUCCESS, $event);
+
+        if (!is_null($event->getStatus())) {
+            $importEntity->setStatus($event->getStatus());
+        } else {
+            $importEntity->setStatus(\Bluetea\ImportBundle\Model\Import::READY);
+        }
         $this->importManager->updateImport($importEntity);
+
+        $event = new ImportEvent($this->importType);
+        $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_SUCCESS, $event);
 
         return true;
     }
