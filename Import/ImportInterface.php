@@ -45,7 +45,11 @@ interface ImportInterface
 
     public function importLine($line);
 
+    public function getLogger();
+
     public function setLogger(ImportLogger $logger);
+
+    public function getFactory();
 
     public function setFactory(FactoryInterface $factory);
 }

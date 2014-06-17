@@ -72,6 +72,10 @@ abstract class BaseImport implements ImportInterface
             }
         }
         $this->logger->add('End import');
+
+        // Save statistics in log
+        $this->logger->logStatistics();
+
         return true;
     }
 
@@ -171,6 +175,16 @@ abstract class BaseImport implements ImportInterface
     }
 
     /**
+     * Get the Import Logger
+     *
+     * @return ImportLogger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
      * Set Import Logger
      *
      * @param \Bluetea\ImportBundle\Import\ImportLogger $logger
@@ -178,6 +192,16 @@ abstract class BaseImport implements ImportInterface
     public function setLogger(ImportLogger $logger)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * Get the Import Factory
+     *
+     * @return FactoryInterface
+     */
+    public function getFactory()
+    {
+        return $this->factory;
     }
 
     /**
