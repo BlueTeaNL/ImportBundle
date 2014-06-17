@@ -19,7 +19,7 @@ class ImportFactory
      *
      * @var array
      */
-    protected $options = [];
+    protected $options = array();
 
     /**
      * Default parser
