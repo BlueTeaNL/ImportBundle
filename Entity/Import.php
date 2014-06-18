@@ -100,7 +100,7 @@ class Import extends BaseImport
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return '../../../../../../web/'.$this->getUploadDir();
+        return __DIR__.'/../../../../../../web/'.$this->getUploadDir();
     }
 
     /**
