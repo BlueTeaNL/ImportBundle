@@ -1,0 +1,5 @@
+bluetea_import.to_much_errors: The maximum amount of error threshold is reached. The import is aborted.
+bluetea_import.start_import: The import is started
+bluetea_import.end_import: The import is ended
+bluetea_import.entity_invalid: The entity is invalid
+bluetea_import.em_error: The database engine throwed an error

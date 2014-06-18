@@ -45,5 +45,11 @@ class BlueteaImportExtension extends Extension
 
         $importLogClass = $this->config['import_log_class'];
         $this->container->setParameter('bluetea_import.model.import_log.class', $importLogClass);
+
+        $errorThreshold = $this->config['error_threshold'];
+        $this->container->setParameter('bluetea_import.import.error_threshold', $errorThreshold);
+
+        $progressUpdate = $this->config['progress_update'];
+        $this->container->setParameter('bluetea_import.import.progress_update', $progressUpdate);
     }
 }

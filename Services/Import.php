@@ -45,6 +45,14 @@ class Import
      */
     protected $importLogger = null;
 
+    /**
+     * Constructor
+     *
+     * @param FactoryInterface $factory
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ImportManagerInterface $importManager
+     * @param ImportLogManagerInterface $importLogManager
+     */
     public function __construct(
         FactoryInterface $factory,
         EventDispatcherInterface $eventDispatcher,
@@ -58,15 +66,24 @@ class Import
         $this->importLogManager = $importLogManager;
     }
 
+    /**
+     * Start the import process
+     *
+     * @return bool
+     */
     public function startImport()
     {
-        $this->importLogger = new ImportLogger();
-
+        // Validate the given Import entity and import type
         $this->validateMandatoryProperties();
 
+        // Initialize a new ImportLogger instance
+        $this->importLogger = new ImportLogger();
+
+        // Set the given factory and logger
         $this->importType->setFactory($this->factory);
         $this->importType->setLogger($this->importLogger);
 
+        // Dispatch IMPORT_INITIALIZE event
         $event = new ImportEvent($this->importType);
         $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_INITIALIZE, $event);
 
@@ -79,38 +96,50 @@ class Import
         }
 
         // Add ImportLog
-        $importLog = $this->importLogManager->createImportLog();
-        $importLog->setImport($this->factory->getImportEntity());
-        $importLog->setDatetime(new \DateTime());
-        $importLog->setLog($this->importLogger->getLog());
-        $this->importLogManager->updateImportLog($importLog);
+        $this->addImportLog();
 
-        $importEntity = $this->factory->getImportEntity();
-        $statistics = $this->getStatistics();
-        if ($statistics['error'] > 0) {
-            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::ERROR);
-        } elseif ($statistics['skipped'] > 0) {
-            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::WARNING);
-        } else {
-            $importEntity->setStatus(\Bluetea\ImportBundle\Entity\Import::READY);
-        }
-
+        // Dispatch IMPORT_SUCCESS event
         $event = new GetStatusEvent($this->importType);
         $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_SUCCESS, $event);
 
+        // Get import entity from factory
+        $importEntity = $this->factory->getImportEntity();
+        // Set the progress to 100 %
+        $importEntity->setProgress(100);
+        // Handle the status of the import
         if (!is_null($event->getStatus())) {
             $importEntity->setStatus($event->getStatus());
         } else {
             $importEntity->setStatus(\Bluetea\ImportBundle\Model\Import::READY);
         }
+        // Update the import entity
         $this->importManager->updateImport($importEntity);
 
+        // Dispatch IMPORT_COMPLETED event
         $event = new ImportEvent($this->importType);
-        $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_SUCCESS, $event);
+        $this->eventDispatcher->dispatch(BlueteaImportEvents::IMPORT_COMPLETED, $event);
 
         return true;
     }
 
+    /**
+     * Add the import log
+     */
+    protected function addImportLog()
+    {
+        $importLog = $this->importLogManager->createImportLog();
+        $importLog->setImport($this->factory->getImportEntity());
+        $importLog->setDatetime(new \DateTime());
+        $importLog->setLog($this->importLogger->getLog());
+        $importLog->setStatistics($this->importLogger->getStatistics());
+        $this->importLogManager->updateImportLog($importLog);
+    }
+
+    /**
+     * Validate the mandatory properties before starting the import
+     *
+     * @throws \Bluetea\ImportBundle\Exception\ImportException
+     */
     protected function validateMandatoryProperties()
     {
         $importEntity = $this->factory->getImportEntity();

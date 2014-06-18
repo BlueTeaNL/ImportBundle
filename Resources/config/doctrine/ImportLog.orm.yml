@@ -12,6 +12,8 @@ Bluetea\ImportBundle\Entity\ImportLog:
             type: text
         datetime:
             type: datetime
+        statistics:
+            type: array
     manyToOne:
         import:
             targetEntity: Bluetea\ImportBundle\Entity\Import

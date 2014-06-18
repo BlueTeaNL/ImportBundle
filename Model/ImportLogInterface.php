@@ -38,4 +38,14 @@ interface ImportLogInterface
      * @return ImportInterface
      */
     public function getImport();
+
+    /**
+     * @param mixed $statistics
+     */
+    public function setStatistics($statistics);
+
+    /**
+     * @return mixed
+     */
+    public function getStatistics();
 }

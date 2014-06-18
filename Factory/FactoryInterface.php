@@ -41,4 +41,11 @@ interface FactoryInterface
      * @return array
      */
     public function getOptions();
+
+    /**
+     * Return the length (lines) of a file
+     *
+     * @return integer
+     */
+    public function getLength();
 }

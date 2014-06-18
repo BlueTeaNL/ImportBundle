@@ -24,6 +24,8 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('import_class')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('import_log_class')->isRequired()->cannotBeEmpty()->end()
+                ->integerNode('error_threshold')->defaultValue(1000)->end()
+                ->integerNode('progress_update')->defaultValue(1000)->end()
             ->end();
 
         return $treeBuilder;

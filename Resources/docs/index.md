@@ -53,6 +53,8 @@ Add the following configuration to your `config.yml` file.
 bluetea_import:
     import_class: Bluetea\ImportBundle\Entity\Import
     import_log_class: Bluetea\ImportBundle\Entity\ImportLog
+    error_threshold: 1000 # OPTIONAL! Import is aborted if it hits the error threshold
+    progress_update: 1000 # OPTIONAL! Updates the progress field every x lines
 ```
 
 If you like to implement your own entities, read the [extend entities documentation](extend_entities.md).

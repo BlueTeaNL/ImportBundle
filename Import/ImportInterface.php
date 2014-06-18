@@ -44,12 +44,41 @@ interface ImportInterface
     public function import();
 
     public function importLine($line);
-
+    /**
+     * Get the Import Logger
+     *
+     * @return ImportLogger
+     */
     public function getLogger();
 
+    /**
+     * Set Import Logger
+     *
+     * @param \Bluetea\ImportBundle\Import\ImportLogger $logger
+     */
     public function setLogger(ImportLogger $logger);
 
+    /**
+     * Get the Import Factory
+     *
+     * @return FactoryInterface
+     */
     public function getFactory();
 
+    /**
+     * Set factory
+     *
+     * @param FactoryInterface $factory
+     */
     public function setFactory(FactoryInterface $factory);
+
+    /**
+     * @param \Bluetea\ImportBundle\Model\ImportManagerInterface $importManager
+     */
+    public function setImportManager($importManager);
+
+    /**
+     * @return \Bluetea\ImportBundle\Model\ImportManagerInterface
+     */
+    public function getImportManager();
 }

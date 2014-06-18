@@ -96,4 +96,14 @@ interface ImportInterface
      * @return string
      */
     public function getAbsolutePath();
+
+    /**
+     * @param float $progress
+     */
+    public function setProgress($progress);
+
+    /**
+     * @return float
+     */
+    public function getProgress();
 }

@@ -4,10 +4,30 @@ namespace Bluetea\ImportBundle\Model;
 
 abstract class ImportLog implements ImportLogInterface
 {
+    /**
+     * @var integer
+     */
     protected $id;
+
+    /**
+     * @var string
+     */
     protected $log;
+
+    /**
+     * @var \DateTime
+     */
     protected $datetime;
+
+    /**
+     * @var ImportInterface
+     */
     protected $import;
+
+    /**
+     * @var array
+     */
+    protected $statistics;
 
     /**
      * @return integer
@@ -63,5 +83,21 @@ abstract class ImportLog implements ImportLogInterface
     public function getImport()
     {
         return $this->import;
+    }
+
+    /**
+     * @param mixed $statistics
+     */
+    public function setStatistics($statistics)
+    {
+        $this->statistics = $statistics;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatistics()
+    {
+        return $this->statistics;
     }
 }

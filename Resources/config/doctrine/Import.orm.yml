@@ -22,6 +22,8 @@ Bluetea\ImportBundle\Entity\Import:
         status:
             type: string
             length: 255
+        progress:
+            type: float
     oneToMany:
         logs:
             targetEntity: Bluetea\ImportBundle\Entity\ImportLog

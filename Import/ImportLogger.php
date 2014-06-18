@@ -30,6 +30,13 @@ class ImportLogger
         'unchanged' => 0
     );
 
+    /**
+     * Add message to the log
+     *
+     * @param $message
+     * @param string $type
+     * @param bool $extended
+     */
     public function add($message, $type = ImportLogger::INFO, $extended = true)
     {
         $this->log[] = array (
@@ -40,16 +47,29 @@ class ImportLogger
         );
     }
 
+    /**
+     * Add line to the log
+     */
     public function addLine()
     {
         $this->add('=======================================================', ImportLogger::INFO, false);
     }
 
+    /**
+     * Get the log
+     *
+     * @return string
+     */
     public function getLog()
     {
         return $this->parseLog();
     }
 
+    /**
+     * Parse log and return a string
+     *
+     * @return string
+     */
     protected function parseLog()
     {
         $log = '';
@@ -73,6 +93,11 @@ class ImportLogger
         return $log;
     }
 
+    /**
+     * Log statistics in the import log
+     *
+     * @deprecated Removed in v2.0
+     */
     public function logStatistics()
     {
         $counter = $this->getStatistics();
@@ -90,56 +115,109 @@ class ImportLogger
         ));
         $this->addLine();
     }
-    public function getStatistics()
+
+    /**
+     * Get the log statistics
+     *
+     * @param null|string $field
+     * @param bool $calculatePercentage
+     * @return array
+     */
+    public function getStatistics($field = null, $calculatePercentage = true)
     {
         $percErrors = 0;
         $nrErrors = array_sum($this->counter);
-        if ($nrErrors > 0) {
+
+        if ($nrErrors > 0 && $calculatePercentage == true) {
             $percErrors =  round(($this->counter['error'] / $nrErrors) * 100, 1);
         }
 
-        return array(
-            "added" => $this->counter['added'],
-            "updated" => $this->counter['updated'],
-            "deleted" => $this->counter['deleted'],
-            "unchanged" => $this->counter['unchanged'],
-            "skipped" => $this->counter['skipped'],
-            "error" => $this->counter['error'],
-            "total" => $nrErrors,
-            "errorPercentage" => $percErrors
-        );
+        if (is_null($field)) {
+            return array(
+                "added" => $this->counter['added'],
+                "updated" => $this->counter['updated'],
+                "deleted" => $this->counter['deleted'],
+                "unchanged" => $this->counter['unchanged'],
+                "skipped" => $this->counter['skipped'],
+                "error" => $this->counter['error'],
+                "total" => $nrErrors,
+                "errorPercentage" => $percErrors
+            );
+        } else {
+            if (array_key_exists($field, $this->counter)) {
+                return $this->counter[$field];
+            }
+        }
+
+        return false;
     }
 
+    /**
+     * Increase added counter
+     *
+     * @param int $count
+     */
     public function countAdded($count = 1)
     {
         $this->counter['added'] += $count;
     }
 
+    /**
+     * Increase updated counter
+     *
+     * @param int $count
+     */
     public function countUpdated($count = 1)
     {
         $this->counter['updated'] += $count;
     }
 
+    /**
+     * Increase deleted counter
+     *
+     * @param int $count
+     */
     public function countDeleted($count = 1)
     {
         $this->counter['deleted'] += $count;
     }
 
+    /**
+     * Increase error counter
+     *
+     * @param int $count
+     */
     public function countError($count = 1)
     {
         $this->counter['error'] += $count;
     }
 
+    /**
+     * Increase skipped counter
+     *
+     * @param int $count
+     */
     public function countSkipped($count = 1)
     {
         $this->counter['skipped'] += $count;
     }
 
+    /**
+     * Increase unchanged counter
+     *
+     * @param int $count
+     */
     public function countUnchanged($count = 1)
     {
         $this->counter['unchanged'] += $count;
     }
 
+    /**
+     * Get the error count
+     *
+     * @deprecated Removed in v2.0, use getStatistics instead
+     * @return mixed
+     */
     public function getErrorCount()
     {
         return $this->counter['error'];

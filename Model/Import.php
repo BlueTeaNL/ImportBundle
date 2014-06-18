@@ -55,6 +55,11 @@ abstract class Import implements ImportInterface
     protected $logs;
 
     /**
+     * @var float
+     */
+    protected $progress = 0;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -190,5 +195,21 @@ abstract class Import implements ImportInterface
     public function setFile(UploadedFile $file)
     {
         $this->file = $file;
+    }
+
+    /**
+     * @param float $progress
+     */
+    public function setProgress($progress)
+    {
+        $this->progress = $progress;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProgress()
+    {
+        return $this->progress;
     }
 }

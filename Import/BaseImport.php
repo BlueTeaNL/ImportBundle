@@ -20,6 +20,11 @@ abstract class BaseImport implements ImportInterface
     protected $factory;
 
     /**
+     * @var \Bluetea\ImportBundle\Model\ImportManagerInterface
+     */
+    protected $importManager;
+
+    /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
@@ -39,7 +44,8 @@ abstract class BaseImport implements ImportInterface
     {
         $this->container = $container;
         $this->em = $om;
-        // APC Cache
+
+        // Clear the Doctrine cache before importing the file
         $apcCache = $this->em->getConfiguration()->getResultCacheImpl();
         $apcCache->deleteAll();
     }
@@ -51,10 +57,15 @@ abstract class BaseImport implements ImportInterface
      */
     public function import()
     {
-        $this->logger->add('Start import');
+        $this->logger->add($this->container->get('translator')->trans('bluetea_import.start_import', array(), 'import'));
+        // Parse the file
+        $parsedFile = $this->factory->parse();
+        // Get the length of the file
+        $fileCount = $this->factory->getLength();
         // Parse file with the right parser (factory) and loop through all lines
-        foreach ($this->factory->parse() as $key => $line) {
-            if(count($line) > 1) {
+        foreach ($parsedFile as $key => $line) {
+            // Check for empty lines, we discard them
+            if(!(count($line) == 1 && empty($line[0]))) {
                 try
                 {
                     $this->importLine(array_map('trim', $line));
@@ -64,17 +75,21 @@ abstract class BaseImport implements ImportInterface
                 {
                     $this->logger->add(sprintf('Line %d: %s', $key, $e->getMessage()), ImportLogger::ERROR);
                     $this->logger->countError();
-                    if ($this->logger->getErrorCount() > 1000) {
-                        $this->logger->add('To much errors... ending import', ImportLogger::CRITICAL);
+                    if ($this->logger->getStatistics('error', false) > $this->container->getParameter('bluetea_import.import.error_threshold')) {
+                        $this->logger->add(
+                            $this->container->get('translator')->trans('bluetea_import.to_much_errors', array(), 'import'),
+                            ImportLogger::CRITICAL
+                        );
+                        // Break the foreach loop and end the import
                         break;
                     }
                 }
             }
+            if ($key > 0 && $key % $this->container->getParameter('bluetea_import.import.progress_update') === 0) {
+                $this->updateProgress(($key / $fileCount) * 100);
+            }
         }
-        $this->logger->add('End import');
-
-        // Save statistics in log
-        $this->logger->logStatistics();
+        $this->logger->add($this->container->get('translator')->trans('bluetea_import.end_import', array(), 'import'));
 
         return true;
     }
@@ -104,35 +119,22 @@ abstract class BaseImport implements ImportInterface
         if ($originalEntity != $entity) {
             // If the entity is updated, remove the query result for this entity from the cache
             // so the next query doesn't contain old results
-            if ($cacheId) {
+            if (!is_null($cacheId)) {
                 $this->deleteFromCache($cacheId);
             }
-            $validator = $this->container->get('validator');
-            // Check if the entity is valid
-            $errors = $validator->validate($entity);
 
-            if (count($errors) > 0) {
-                $this->logger->add(sprintf('Entity isn\'t valid'), ImportLogger::ERROR);
-                foreach ($errors as $error) {
-                    $this->logger->add(sprintf('%s (%s: %s)', $error->getMessage(), $error->getPropertyPath(), $error->getInvalidValue()), ImportLogger::ERROR);
+            if ($this->validateEntity($entity)) {
+                // Check if the entity has an id
+                // If it doesn't have an id, we add a new entity and it should be counted
+                if ($entity->getId() !== null) {
+                    $this->logger->countUpdated();
+                } else {
+                    $this->logger->countAdded();
                 }
-                $this->logger->countError();
-            } else {
-                // Try to persist and flush the entity
-                try {
-                    if ($entity->getId() !== null) {
-                        $this->logger->countUpdated();
-                    } else {
-                        $this->logger->countAdded();
-                    }
-                    $this->em->persist($entity);
-                    $this->em->flush();
+                $this->em->persist($entity);
 
-                    if ($clearAfterFlush) {
-                        $this->em->clear();
-                    }
-                } catch (\Doctrine\ORM\ORMException $e) {
-                    $this->logger->add($e->getMessage(), ImportLogger::CRITICAL);
+                if ($this->flushEntityManager() && $clearAfterFlush) {
+                    $this->em->clear();
                 }
             }
         } else {
@@ -153,25 +155,75 @@ abstract class BaseImport implements ImportInterface
             $this->deleteFromCache($cacheId);
         }
 
-        $validator = $this->container->get('validator');
-        // Check if the entity is valid
-        $errors = $validator->validate($entity);
+        if ($this->validateEntity($entity)) {
+            $this->logger->countDeleted();
+            $this->em->remove($entity);
+            $this->flushEntityManager();
+        }
+    }
+
+    /**
+     * Update progress
+     *
+     * @param $percentage
+     */
+    protected function updateProgress($percentage)
+    {
+        $importEntity = $this->factory->getImportEntity();
+        $importEntity->setProgress($percentage);
+        $this->container->get('bluetea_import.import_manager')->updateImport($importEntity);
+    }
+
+    /**
+     * Flush the entity manager and catch errors if they occur
+     *
+     * @return bool
+     */
+    protected function flushEntityManager()
+    {
+        try {
+            $this->em->flush();
+        } catch (\Doctrine\ORM\ORMException $e) {
+            $this->logger->add(
+                $this->container->get('translator')->trans('bluetea_import.em_error', array(), 'import'),
+                ImportLogger::CRITICAL
+            );
+            $this->logger->add($e->getMessage(), ImportLogger::CRITICAL);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate the entity with the Symfony2 validator. If the entity isn't valid we return false, else we return
+     * true.
+     *
+     * @param $entity
+     * @return bool
+     */
+    protected function validateEntity($entity)
+    {
+        $errors = $this->container->get('validator')->validate($entity);
+
         if (count($errors) > 0) {
-            $this->logger->add(sprintf('Entity isn\'t valid'), ImportLogger::ERROR);
-            foreach ($errors as $errorI => $error) {
-                $this->logger->add(sprintf('Error %s: %s', $errorI + 1, $error->getMessage()), ImportLogger::ERROR);
+            $this->logger->add(
+                $this->container->get('translator')->trans('bluetea_import.entity_invalid', array(), 'import'),
+                ImportLogger::ERROR
+            );
+            foreach ($errors as $error) {
+                $this->logger->add(
+                    sprintf('%s (%s: %s)', $error->getMessage(), $error->getPropertyPath(), $error->getInvalidValue()),
+                    ImportLogger::ERROR
+                );
             }
             $this->logger->countError();
-        } else {
-            // Try to persist and flush the entity
-            try {
-                $this->logger->countDeleted();
-                $this->em->remove($entity);
-                $this->em->flush();
-            } catch (\Doctrine\ORM\ORMException $e) {
-                $this->logger->add($e->getMessage(), ImportLogger::CRITICAL);
-            }
+
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -212,5 +264,21 @@ abstract class BaseImport implements ImportInterface
     public function setFactory(FactoryInterface $factory)
     {
         $this->factory = $factory;
+    }
+
+    /**
+     * @param \Bluetea\ImportBundle\Model\ImportManagerInterface $importManager
+     */
+    public function setImportManager($importManager)
+    {
+        $this->importManager = $importManager;
+    }
+
+    /**
+     * @return \Bluetea\ImportBundle\Model\ImportManagerInterface
+     */
+    public function getImportManager()
+    {
+        return $this->importManager;
     }
 }
