@@ -75,7 +75,11 @@ abstract class BaseImport implements ImportInterface
                 {
                     $this->logger->add(sprintf('Line %d: %s', $key, $e->getMessage()), ImportLogger::ERROR);
                     $this->logger->countError();
-                    if ($this->logger->getStatistics('error', false) > $this->container->getParameter('bluetea_import.import.error_threshold')) {
+                    if (
+                        $this->logger->getStatistics('error', false) > $this->container->getParameter('bluetea_import.import.error_threshold')
+                        &&
+                        $this->logger->getStatistics('error', false) == $this->logger->getStatistics('total', false)
+                    ) {
                         $this->logger->add(
                             $this->container->get('translator')->trans('bluetea_import.to_much_errors', array(), 'import'),
                             ImportLogger::CRITICAL
