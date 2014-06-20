@@ -44,10 +44,6 @@ abstract class BaseImport implements ImportInterface
     {
         $this->container = $container;
         $this->em = $om;
-
-        // Clear the Doctrine cache before importing the file
-        $apcCache = $this->em->getConfiguration()->getResultCacheImpl();
-        $apcCache->deleteAll();
     }
 
     /**
