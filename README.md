@@ -1,6 +1,8 @@
 ImportBundle
 ============
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/7cefb555-46cb-4a78-aca6-01ad26bc1929/big.png)](https://insight.sensiolabs.com/projects/7cefb555-46cb-4a78-aca6-01ad26bc1929)
+
 The ImportBundle adds the opportunity to import CSV files in Symfony2.
 
 Features:
