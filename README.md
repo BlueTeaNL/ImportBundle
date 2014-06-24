@@ -14,11 +14,13 @@ Features:
 Documentation
 -------------
 
-The documentation is stored in the `Resources/doc/index.md` file in this bundle:
+The documentation is stored in the `Resources/docs/index.md` file in this bundle:
 
-[Read the documentation](Resources/doc/index.md)
+[Read the documentation](Resources/docs/index.md)
 
 Installation
 ------------
 
 All the installation instructions are located in the documentation.
+=======
+An ImportBundle for the Symfony2 framework
