@@ -132,20 +132,22 @@ class ImportLogger
             $percErrors =  round(($this->counter['error'] / $nrErrors) * 100, 1);
         }
 
+        $statistics = array(
+            "added" => $this->counter['added'],
+            "updated" => $this->counter['updated'],
+            "deleted" => $this->counter['deleted'],
+            "unchanged" => $this->counter['unchanged'],
+            "skipped" => $this->counter['skipped'],
+            "error" => $this->counter['error'],
+            "total" => $nrErrors,
+            "errorPercentage" => $percErrors
+        );
+
         if (is_null($field)) {
-            return array(
-                "added" => $this->counter['added'],
-                "updated" => $this->counter['updated'],
-                "deleted" => $this->counter['deleted'],
-                "unchanged" => $this->counter['unchanged'],
-                "skipped" => $this->counter['skipped'],
-                "error" => $this->counter['error'],
-                "total" => $nrErrors,
-                "errorPercentage" => $percErrors
-            );
+            return $statistics;
         } else {
-            if (array_key_exists($field, $this->counter)) {
-                return $this->counter[$field];
+            if (array_key_exists($field, $statistics)) {
+                return $statistics[$field];
             }
         }
 
