@@ -19,10 +19,10 @@ services:
 
     # Import services
     bluetea_import.factory.csv:
-        class: Bluetea\ImportBundle\Factory\CSVFactory
+        class: %bluetea_import.factory.csv.class%
 
     bluetea_import.csv:
-        class: Bluetea\ImportBundle\Services\Import
+        class: %bluetea_import.import.class%
         arguments:
             - @bluetea_import.factory.csv
             - @event_dispatcher
