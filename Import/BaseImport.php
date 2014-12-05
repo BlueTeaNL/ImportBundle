@@ -133,12 +133,16 @@ abstract class BaseImport implements ImportInterface
                 }
                 $this->em->persist($entity);
 
-                if ($this->flushEntityManager() && $clearAfterFlush) {
+                if ($this->flushEntityManager() && $clearAfterFlush === true) {
                     $this->em->clear();
                 }
             }
         } else {
             $this->logger->countUnchanged();
+            
+            if ($clearAfterFlush === true) {
+                $this->em->clear();
+            }
         }
     }
 
