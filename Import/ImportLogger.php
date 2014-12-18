@@ -128,7 +128,7 @@ class ImportLogger
         $percErrors = 0;
         $nrErrors = array_sum($this->counter);
 
-        if ($nrErrors > 0 && $calculatePercentage == true) {
+        if ($nrErrors > 0 && $calculatePercentage === true) {
             $percErrors =  round(($this->counter['error'] / $nrErrors) * 100, 1);
         }
 
