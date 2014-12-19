@@ -2,7 +2,7 @@ Using the managers
 ==================
 
 You can use the managers to manage the import and import log entities which you have
-configures in your `app/config/config.yaml` file.
+configured in your `app/config/config.yaml` file.
 
 ## Usage
 

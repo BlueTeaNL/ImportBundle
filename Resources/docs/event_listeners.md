@@ -1,6 +1,31 @@
 Event Listeners
 ===============
 
+## Events
+
+The ImportBundle fires events when starting and finishing an import.
+
+**BlueteaImportEvents::IMPORT_INITIALIZE**
+
+This event is fired when initializing an import and allows you to get the import entity before running the import.
+The event listener method receives a Bluetea\ImportBundle\Events\GetImportEvent instance.
+
+**BlueteaImportEvents::IMPORT_SUCCESS**
+
+This event is fired when an import is successful and allows you to get the import entity before running the import.
+The event listener method receives a Bluetea\ImportBundle\Events\GetImportLogEvent instance.
+
+**BlueteaImportEvents::IMPORT_FAILED**
+
+This event is fired when an import is finished and allows you to get the import entity before running the import.
+The event listener method receives a Bluetea\ImportBundle\Events\GetImportLogEvent instance.
+
+**BlueteaImportEvents::IMPORT_COMPLETED**
+
+This event is fired when an import is finished and allows you to get the import entity before running the import.
+The event listener method receives a Bluetea\ImportBundle\Events\GetImportLogEvent instance.
+
+
 ```php
 namespace Acme\UserBundle\EventListener;
 

@@ -1,10 +1,10 @@
 Getting started with BlueteaImportBundle
 ========================================
 
-The ImportBundle gives you the chance to import CSV files (or other
-file types when implementing more factories) in your Symfony2 application.
+The ImportBundle enables you to import data to your application. At the moment we only support CSV files but this can
+be expended when adding import factories.
 
-## Prerequirements
+## Requirements
 
 This bundle requires Symfony 2.3+ and PHP 5.3.2+
 
@@ -22,7 +22,7 @@ Installation is simple:
 Add BlueteaImportBundle by running the command:
 
 ```bash
-$ php composer.phar require bluetea/import-bundle '~1.1'
+$ php composer.phar require bluetea/import-bundle '~1.2'
 ```
 
 Composer will install the bundle to your project's `vendor/bluetea` directory.
@@ -63,7 +63,7 @@ If you haven't enabled doctrine auto mapping, add `BlueteaImportBundle` to your 
 
 ### Step 4: Update your database schema
 
-Now that the bundle is configures, the last thing you need to do is update your database schema
+Now that the bundle is configured, the last thing you need to do is update your database schema
 because the bundle adds the Import and ImportLog entity. If you're using your own entities you
 should exclude the `BlueteaImportBundle` entities.
 

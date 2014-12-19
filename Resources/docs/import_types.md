@@ -29,5 +29,7 @@ acme_import.your_import_type:
         - { name: bluetea_import.import_type, description: 'your import type' }
 ```
 
+The import types are loaded into the import chain by using the `bluetea_import.import_type` tag. The description is
+used for human readability.
 
 [Index](index.md)

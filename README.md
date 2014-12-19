@@ -1,28 +1,15 @@
-ImportBundle
-============
+BlueTea ImportBundle
+====================
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/7cefb555-46cb-4a78-aca6-01ad26bc1929/big.png)](https://insight.sensiolabs.com/projects/7cefb555-46cb-4a78-aca6-01ad26bc1929)
 
-The ImportBundle adds the opportunity to import CSV files in Symfony2.
+The ImportBundle enables you to import data to your application. At the moment we only support CSV files but this can
+be expended when adding import factories.
 
-Features:
+This bundle doesn't contains any views but feel free to add them with a PR!
 
-* Import CSV files and store data via Doctrine ORM
-* You can add more factories to import other file types
-* Use a separate entity manager for the import logic
+## Documentation
 
-**Note:** This bundle does *not* contain views.
-
-Documentation
--------------
-
-The documentation is stored in the `Resources/docs/index.md` file in this bundle:
+The documentation files aer stored in the `Resources/docs` directory.
 
 [Read the documentation](Resources/docs/index.md)
-
-Installation
-------------
-
-All the installation instructions are located in the documentation.
-=======
-An ImportBundle for the Symfony2 framework

@@ -1,7 +1,10 @@
 Extend the entities
 ===================
 
-Example:
+If you want to add extra properties to the import or importLog entities you can extend them. Then configure your
+entities in the bluetea_import setting in the `config.yml`.
+
+Example Import entity:
 
 ```php
 <?php
@@ -30,8 +33,5 @@ class Import extends BaseImport
     }
 }
 ```
-
-Above is for the Import entity but it's the same implementation for the ImportLog entity
-
 
 [Index](index.md)
