@@ -1,0 +1,5 @@
+bluetea_import.to_much_errors: De maximale aantal fouten zijn bereikt. De import wordt afgebroken.
+bluetea_import.start_import: De import is gestart
+bluetea_import.end_import: De import is voltooid
+bluetea_import.entity_invalid: De entiteit is ongeldig
+bluetea_import.em_error: De database connectie heeft een fout
